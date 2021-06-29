@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api2.model.Product;
-import com.api2.model.Response;
+import com.api2.schema.Response;
 import com.api2.service.ProductService;
 
 import io.swagger.annotations.Api;

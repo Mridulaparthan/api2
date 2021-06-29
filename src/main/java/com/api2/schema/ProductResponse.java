@@ -1,22 +1,16 @@
-package com.api2.model;
+package com.api2.schema;
 
 import java.sql.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+/**
+ * 
+ * ProductResponse Class maps the Product class to ProductResponse
+ *
+ */
+public class ProductResponse {
 
-@Entity
-public class Product {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer id;
-	@Column(length = 10)
 	String productId;
-	@Column(length = 10)
 	String productName;
 	Date productExpiryDate;
 
@@ -57,5 +51,4 @@ public class Product {
 		return "Product [id=" + id + ", productId=" + productId + ", productName=" + productName
 				+ ", productExpiryDate=" + productExpiryDate + "]";
 	}
-
 }

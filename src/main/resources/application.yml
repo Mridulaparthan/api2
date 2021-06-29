@@ -3,7 +3,7 @@ server:
   
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/testdb
+    url: jdbc:mysql://localhost:3306/testapi
     username: root
     password: root
     
