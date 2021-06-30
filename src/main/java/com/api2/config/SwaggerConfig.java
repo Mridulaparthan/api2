@@ -17,7 +17,7 @@ public class SwaggerConfig {
 	@Bean
 	public ApiInfo apiInfo() {
 		ApiInfoBuilder apiBuilder = new ApiInfoBuilder();
-		apiBuilder.title("Api2").version("1.0").license("(c) Livin").description("List of All Endpoints used in Api2");
+		apiBuilder.title("Api2").version("1.0").license("(c) Mridula").description("List of All Endpoints used in Api2");
 		return apiBuilder.build();
 	}
 
