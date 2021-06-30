@@ -3,9 +3,9 @@ server:
   
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/testapi
+    url: jdbc:mysql://localhost:3306/testdb1
     username: root
-    password: root
+    password: H@1mysql
     
   jpa:
     hibernate:
