@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.api2.model.Product;
 import com.api2.repository.ProductRepo;
+import com.api2.schema.ProductResponse;
+import com.api2.schema.Response;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,6 +30,18 @@ class ProductServiceTest {
 	private ProductRepo repository;
 
 	Product product;
+	Response response;
+	ProductResponse productResponse;
+
+	private ProductResponse getProductResponse(Product product) {
+		ProductResponse productResponse = new ProductResponse();
+		productResponse.setId(product.getId());
+		productResponse.setProductExpiryDate(product.getProductExpiryDate());
+		productResponse.setProductId(product.getProductId());
+		productResponse.setProductName(product.getProductName());
+		return productResponse;
+
+	}
 
 	@BeforeEach
 	public void setUp() {
@@ -37,46 +51,43 @@ class ProductServiceTest {
 		product.setProductName("Noodles");
 		product.setProductExpiryDate(Date.valueOf("2021-08-12"));
 
+		response = new Response();
+		response.setResponseType("SUCCESS");
+		response.setResponseMessage("NOT EXPIRED");
+		response.setProductResponse(this.getProductResponse(product));
 	}
 
 	@Test
 	public void getProductByIdTest() {
 
 		when(repository.findByProductId("G1")).thenReturn(Optional.of(product));
-		String expected = "Response [responseType=SUCCESS, responseMessage=NOT EXPIRED, productResponse="
-				+ "Product [id=1, productId=G1, productName=Noodles, productExpiryDate=2021-08-12]]";
-		String actual = service.getProductById("G1").toString();
-		assertEquals(expected, actual);
+		assertEquals(response.toString(), service.getProductById("G1").toString());
 	}
 
 	@Test
 	public void addProductTest() {
+		response.setResponseMessage("PRODUCT SAVED");
 		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.empty());
 		when(repository.save(product)).thenReturn(product);
-		String expected = "Response [responseType=SUCCESS, responseMessage=PRODUCT SAVED, productResponse="
-				+ "Product [id=1, productId=G1, productName=Noodles, productExpiryDate=2021-08-12]]";
-		String actual = service.addProduct(product).toString();
-		assertEquals(expected, actual);
+		assertEquals(response.toString(), service.addProduct(product).toString());
 	}
 
 	@Test
 	public void updateProductTest() {
-		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.of(product));
 		product.setProductName("Burger");
+		response.setResponseMessage("PRODUCT UPDATED");
+		response.setProductResponse(this.getProductResponse(product));
+		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.of(product));
 		when(repository.save(product)).thenReturn(product);
-		String expected = "Response [responseType=SUCCESS, responseMessage=PRODUCT UPDATED, productResponse="
-				+ "Product [id=1, productId=G1, productName=Burger, productExpiryDate=2021-08-12]]";
-		String actual = service.updateProduct(product).toString();
-		assertEquals(expected, actual);
-
+		assertEquals(response.toString(), service.updateProduct(product).toString());
 	}
 
 	@Test
 	public void deleteProductTest() {
+		response.setResponseType("FAILED");
+		response.setResponseMessage("PRODUCT NOT EXPIRED");
+		response.setProductResponse(null);
 		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.of(product));
-		String expected = "Response [responseType=FAILED, responseMessage=PRODUCT NOT EXPIRED, productResponse=null]";
-		String actual = service.deleteProduct(product.getProductId()).toString();
-		assertEquals(expected, actual);
-
+		assertEquals(response.toString(), service.deleteProduct(product.getProductId()).toString());
 	}
 }
