@@ -1,12 +1,16 @@
 server:
   port: 8082
-  
 spring:
+  application:
+    name: Api2
   datasource:
-    url: jdbc:mysql://localhost:3306/testdb1
+    url: jdbc:mysql://localhost:3306/testdb
     username: root
     password: H@1mysql
-    
   jpa:
     hibernate:
       ddl-auto: update
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
