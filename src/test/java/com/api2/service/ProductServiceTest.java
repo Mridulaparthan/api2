@@ -47,9 +47,9 @@ class ProductServiceTest {
 	public void setUp() {
 		product = new Product();
 		product.setId(1);
-		product.setProductId("G1");
+		product.setProductId("A1");
 		product.setProductName("Noodles");
-		product.setProductExpiryDate(Date.valueOf("2021-08-12"));
+		product.setProductExpiryDate(Date.valueOf("2021-08-11"));
 
 		response = new Response();
 		response.setResponseType("SUCCESS");
@@ -60,8 +60,11 @@ class ProductServiceTest {
 	@Test
 	public void getProductByIdTest() {
 
-		when(repository.findByProductId("G1")).thenReturn(Optional.of(product));
-		assertEquals(response.toString(), service.getProductById("G1").toString());
+
+		when(repository.findByProductId("A1")).thenReturn(Optional.of(product));
+		Response productResponse = service.getProductById("A1");
+		assertNotNull(productResponse);
+		assertEquals("NOT EXPIRED", productResponse.getResponseMessage());
 	}
 
 	@Test
@@ -69,7 +72,9 @@ class ProductServiceTest {
 		response.setResponseMessage("PRODUCT SAVED");
 		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.empty());
 		when(repository.save(product)).thenReturn(product);
-		assertEquals(response.toString(), service.addProduct(product).toString());
+		Response productResponse = service.addProduct(product);
+		assertNotNull(productResponse);
+		assertEquals("PRODUCT SAVED", productResponse.getResponseMessage());
 	}
 
 	@Test
@@ -79,7 +84,9 @@ class ProductServiceTest {
 		response.setProductResponse(this.getProductResponse(product));
 		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.of(product));
 		when(repository.save(product)).thenReturn(product);
-		assertEquals(response.toString(), service.updateProduct(product).toString());
+		Response productResponse = service.updateProduct(product);
+		assertNotNull(productResponse);
+		assertEquals("PRODUCT UPDATED", productResponse.getResponseMessage());
 	}
 
 	@Test
@@ -88,6 +95,8 @@ class ProductServiceTest {
 		response.setResponseMessage("PRODUCT NOT EXPIRED");
 		response.setProductResponse(null);
 		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.of(product));
-		assertEquals(response.toString(), service.deleteProduct(product.getProductId()).toString());
+		Response productResponse = service.deleteProduct(product.getProductId());
+		assertNotNull(productResponse);
+		assertEquals("PRODUCT NOT EXPIRED", productResponse.getResponseMessage());
 	}
 }
