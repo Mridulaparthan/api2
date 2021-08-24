@@ -1,14 +1,19 @@
 package com.api2.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +30,7 @@ class ProductServiceTest {
 
 	@Autowired
 	private ProductService service;
+
 
 	@MockBean
 	private ProductRepo repository;
@@ -47,9 +53,9 @@ class ProductServiceTest {
 	public void setUp() {
 		product = new Product();
 		product.setId(1);
-		product.setProductId("A1");
+		product.setProductId("G1");
 		product.setProductName("Noodles");
-		product.setProductExpiryDate(Date.valueOf("2021-08-11"));
+		product.setProductExpiryDate(Date.valueOf(LocalDate.now()));
 
 		response = new Response();
 		response.setResponseType("SUCCESS");
@@ -61,8 +67,11 @@ class ProductServiceTest {
 	public void getProductByIdTest() {
 
 
-		when(repository.findByProductId("A1")).thenReturn(Optional.of(product));
-		Response productResponse = service.getProductById("A1");
+		doReturn(Optional.of(product)).when(repository).findByProductId("G1");
+		Response productResponse = service.getProductById("G1");
+		verify(repository, times(1)).findByProductId("G1");
+		
+		assertTrue(repository.findByProductId("G1").isPresent());
 		assertNotNull(productResponse);
 		assertEquals("NOT EXPIRED", productResponse.getResponseMessage());
 	}
