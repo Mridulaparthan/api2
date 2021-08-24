@@ -86,38 +86,38 @@ public class ProductServiceImpl implements ProductService {
 				repo.delete(product.get());
 				log.info("Product was expired and Deleted");
 				log.info("Exited deleteProduct service");
-				return this.getResponse("SUCCESS", "PRODUCT EXPIRED AND DELETED", null); // Product Expired and deleted
+				return this.getResponse("SUCCESS", "PRODUCT EXPIRED AND DELETED", null);
 			}
 			log.info("Product was not Deleted because product was not expired");
 			log.info("Exited deleteProduct service");
-			return this.getResponse("FAILED", "PRODUCT NOT EXPIRED", null); // Product not expired
+			return this.getResponse("FAILED", "PRODUCT NOT EXPIRED", null);
 		}
 		log.info("Product was not Deleted because product was not present");
 		log.info("Exited deleteProduct service");
-		return this.getResponse("FAILED", "PRODUCT NOT PRESENT", null); // Product not present
+		return this.getResponse("FAILED", "PRODUCT NOT PRESENT", null);
 	}
 
 	/**
-	 * Method to get Response
+	 * Create and returns the response.
 	 * 
-	 * @param responseType    input response type
-	 * @param responseMessage input response message
-	 * @param product         input the product
-	 * @return response returns response with these details
+	 * @param responseType
+	 * @param responseMessage
+	 * @param productResponse
+	 * @return response
 	 */
-	private Response getResponse(String responseType, String responseMessage, ProductResponse product) {
+	private Response getResponse(String responseType, String responseMessage, ProductResponse productResponse) {
 		Response response = new Response();
 		response.setResponseType(responseType);
 		response.setResponseMessage(responseMessage);
-		response.setProductResponse(product);
+		response.setProductResponse(productResponse);
 		return response;
 	}
 
 	/**
-	 * Method to map Product to ProductResponse
+	 * Create and returns the productResponse.
 	 * 
-	 * @param product input product
-	 * @return productResponse returns products mapped to product response
+	 * @param product
+	 * @return productResponse
 	 */
 	private ProductResponse getProductResponse(Product product) {
 		ProductResponse productResponse = new ProductResponse();

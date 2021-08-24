@@ -7,8 +7,19 @@ import org.springframework.stereotype.Repository;
 
 import com.api2.model.Product;
 
+/**
+ * 
+ * ProductRepo Interface.
+ *
+ */
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Integer>{
+public interface ProductRepo extends JpaRepository<Product, Integer> {
 
+	/**
+	 * Returns an Optional product.
+	 * 
+	 * @param productId
+	 * @return Optional Product
+	 */
 	public Optional<Product> findByProductId(String productId);
 }

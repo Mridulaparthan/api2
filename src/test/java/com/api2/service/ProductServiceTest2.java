@@ -1,9 +1,6 @@
 package com.api2.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Date;
@@ -16,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.api2.model.Product;
@@ -26,13 +22,13 @@ import com.api2.schema.Response;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class ProductServiceTest {
+class ProductServiceTest2 {
 
 	@Autowired
 	private ProductService service;
 
 
-	@MockBean
+	@Spy
 	private ProductRepo repository;
 
 	Product product;
@@ -63,28 +59,6 @@ class ProductServiceTest {
 		response.setProductResponse(this.getProductResponse(product));
 	}
 
-	@Test
-	public void getProductByIdTest() {
-
-
-		doReturn(Optional.of(product)).when(repository).findByProductId("G1");
-		Response productResponse = service.getProductById("G1");
-		verify(repository, times(1)).findByProductId("G1");
-		
-		assertTrue(repository.findByProductId("G1").isPresent());
-		assertNotNull(productResponse);
-		assertEquals("NOT EXPIRED", productResponse.getResponseMessage());
-	}
-
-	@Test
-	public void addProductTest() {
-		response.setResponseMessage("PRODUCT SAVED");
-		when(repository.findByProductId(product.getProductId())).thenReturn(Optional.empty());
-		when(repository.save(product)).thenReturn(product);
-		Response productResponse = service.addProduct(product);
-		assertNotNull(productResponse);
-		assertEquals("PRODUCT SAVED", productResponse.getResponseMessage());
-	}
 
 	@Test
 	public void updateProductTest() {
@@ -95,6 +69,7 @@ class ProductServiceTest {
 		when(repository.save(product)).thenReturn(product);
 		Response productResponse = service.updateProduct(product);
 		assertNotNull(productResponse);
+		System.out.println(productResponse.getResponseMessage());
 		assertEquals("PRODUCT UPDATED", productResponse.getResponseMessage());
 	}
 
