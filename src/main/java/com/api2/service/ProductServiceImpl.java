@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.api2.model.Product;
 import com.api2.repository.ProductRepo;
-import com.api2.schema.ProductResponse;
+import com.api2.schema.ProductClone;
 import com.api2.schema.Response;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductServiceImpl implements ProductService {
 
 	private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+	private static final String SUCCESS = "SUCCESS";
+	private static final String FAILED = "FAILED";
 	@Autowired
 	ProductRepo repo;
 
@@ -29,20 +31,20 @@ public class ProductServiceImpl implements ProductService {
 
 		Optional<Product> product = repo.findByProductId(productId);
 		if (product.isPresent()) {
-			ProductResponse productResponse = this.getProductResponse(product.get());
-			String status = new String();
-			if (productResponse.getProductExpiryDate().before(Date.valueOf(LocalDate.now()))) {
+			ProductClone productClone = this.getProductClone(product.get());
+			String status;
+			if (product.get().getProductExpiryDate().before(Date.valueOf(LocalDate.now()))) {
 				status = "EXPIRED";
 			} else {
 				status = "NOT EXPIRED";
 			}
 			log.info("Product is Present and Returned");
 			log.info("Exited getProductById service");
-			return this.getResponse("SUCCESS", status, productResponse);
+			return this.getResponse(SUCCESS, status, productClone);
 		}
 		log.info("Product is absent");
 		log.info("Exited getProductById service");
-		return this.getResponse("FAILED", "PRODUCT ABSENT", null);
+		return this.getResponse(FAILED, "PRODUCT ABSENT", null);
 	}
 
 	public Response addProduct(Product product) {
@@ -51,12 +53,12 @@ public class ProductServiceImpl implements ProductService {
 		if (repo.findByProductId(product.getProductId()).isPresent()) {
 			log.info("Product was not added because it was already present");
 			log.info("Exited addProduct service");
-			return this.getResponse("FAILED", "PRODUCT ALREADY PRESENT", null);
+			return this.getResponse(FAILED, "PRODUCT ALREADY PRESENT", null);
 		}
-		ProductResponse productResponse = this.getProductResponse(repo.save(product));
+		ProductClone productClone = this.getProductClone(repo.save(product));
 		log.info("Product was added");
 		log.info("Exited addProduct service");
-		return this.getResponse("SUCCESS", "PRODUCT SAVED", productResponse);
+		return this.getResponse(SUCCESS, "PRODUCT SAVED", productClone);
 	}
 
 	public Response updateProduct(Product product) {
@@ -66,14 +68,14 @@ public class ProductServiceImpl implements ProductService {
 			Product updater = tempProduct.get();
 			updater.setProductExpiryDate(product.getProductExpiryDate());
 			updater.setProductName(product.getProductName());
-			ProductResponse productResponse = this.getProductResponse(repo.save(updater));
+			ProductClone productClone = this.getProductClone(repo.save(updater));
 			log.info("Product was updated");
 			log.info("Exited updateProduct service");
-			return this.getResponse("SUCCESS", "PRODUCT UPDATED", productResponse);
+			return this.getResponse(SUCCESS, "PRODUCT UPDATED", productClone);
 		}
 		log.info("Update failed because product was not present");
 		log.info("Exited updateProduct service");
-		return this.getResponse("FAILED", "PRODUCT NOT PRESENT", null);
+		return this.getResponse(FAILED, "PRODUCT NOT PRESENT", null);
 	}
 
 	public Response deleteProduct(String productId) {
@@ -85,16 +87,13 @@ public class ProductServiceImpl implements ProductService {
 			if ((product.get().getProductExpiryDate()).before(Date.valueOf(LocalDate.now()))) {
 				repo.delete(product.get());
 				log.info("Product was expired and Deleted");
-				log.info("Exited deleteProduct service");
-				return this.getResponse("SUCCESS", "PRODUCT EXPIRED AND DELETED", null);
+				return this.getResponse(SUCCESS, "PRODUCT EXPIRED AND DELETED", null);
 			}
 			log.info("Product was not Deleted because product was not expired");
-			log.info("Exited deleteProduct service");
-			return this.getResponse("FAILED", "PRODUCT NOT EXPIRED", null);
+			return this.getResponse(FAILED, "PRODUCT NOT EXPIRED", null);
 		}
 		log.info("Product was not Deleted because product was not present");
-		log.info("Exited deleteProduct service");
-		return this.getResponse("FAILED", "PRODUCT NOT PRESENT", null);
+		return this.getResponse(FAILED, "PRODUCT NOT PRESENT", null);
 	}
 
 	/**
@@ -102,14 +101,14 @@ public class ProductServiceImpl implements ProductService {
 	 * 
 	 * @param responseType
 	 * @param responseMessage
-	 * @param productResponse
+	 * @param productClone
 	 * @return response
 	 */
-	private Response getResponse(String responseType, String responseMessage, ProductResponse productResponse) {
+	private Response getResponse(String responseType, String responseMessage, ProductClone productClone) {
 		Response response = new Response();
 		response.setResponseType(responseType);
 		response.setResponseMessage(responseMessage);
-		response.setProductResponse(productResponse);
+		response.setProductClone(productClone);
 		return response;
 	}
 
@@ -117,15 +116,15 @@ public class ProductServiceImpl implements ProductService {
 	 * Create and returns the productResponse.
 	 * 
 	 * @param product
-	 * @return productResponse
+	 * @return productClone
 	 */
-	private ProductResponse getProductResponse(Product product) {
-		ProductResponse productResponse = new ProductResponse();
-		productResponse.setId(product.getId());
-		productResponse.setProductExpiryDate(product.getProductExpiryDate());
-		productResponse.setProductId(product.getProductId());
-		productResponse.setProductName(product.getProductName());
-		return productResponse;
+	private ProductClone getProductClone(Product product) {
+		ProductClone productClone = new ProductClone();
+		productClone.setCloneId(product.getId());
+		productClone.setCloneProductExpiryDate(product.getProductExpiryDate().toString());
+		productClone.setCloneProductId(product.getProductId());
+		productClone.setCloneProductName(product.getProductName());
+		return productClone;
 
 	}
 
