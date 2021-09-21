@@ -1,14 +1,16 @@
 package com.api2.schema;
+
 /**
  * 
- * Response Class sends the response back for the requests
+ * Response Class. Contains responseType, responseMessage and productResponse as
+ * variables.
  *
  */
 public class Response {
 
 	String responseType;
 	String responseMessage;
-	ProductResponse productResponse;
+	ProductClone productClone;
 
 	public String getResponseType() {
 		return responseType;
@@ -26,19 +28,18 @@ public class Response {
 		this.responseMessage = responseMessage;
 	}
 
-	public ProductResponse getProductResponse() {
-		return productResponse;
+	public ProductClone getProductClone() {
+		return productClone;
 	}
 
-	public void setProductResponse(ProductResponse productResponse) {
-		this.productResponse = productResponse;
+	public void setProductClone(ProductClone productClone) {
+		this.productClone = productClone;
 	}
 
 	@Override
 	public String toString() {
-		return "Response [responseType=" + responseType + ", responseMessage=" + responseMessage + ", productResponse="
-				+ productResponse + "]";
+		return "Response [responseType=" + responseType + ", responseMessage=" + responseMessage + ", productClone="
+				+ productClone + "]";
 	}
 
 }
-
